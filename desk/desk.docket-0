@@ -1,0 +1,10 @@
+:~  title+'Hoon Format'
+    info+'Autoformatter for hoon'
+    color+0x33.f5f9
+    glob-ames+[~samnec-dozzod-marzod 0v0]
+    site+/apps/hoon-format
+    base+'hoon-format'
+    version+[0 0 1]
+    website+'https://tlon.io'
+    license+'MIT'
+==

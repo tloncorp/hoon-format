@@ -55,9 +55,6 @@
 ::  quick.
 ::
 !:
-=<  :-  %say
-    |=  [^ [gen=hoon ~] *]
-    tang+(flop (turn wall:(need ((p-hoon gen) 0 | 0)) |=(=tape leaf+tape)))
 =/  width  57
 =>  |%
     +$  pose  [indent=@ud wide=_| col=@ud]
