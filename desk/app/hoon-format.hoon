@@ -5,11 +5,21 @@
 ::
 |%
 ++  landing-page
-  |=  code=(unit wall)
-  =/  code=tape
+  |=  code=(unit [input=tape output=wall])
+  =/  input
     ?~  code
       ""
-    (of-wall:format u.code)
+    =/  in  (flop input.u.code)
+    |-  ^-  tape
+    ?~  in
+      ""
+    ?:  =('\0a' i.in)
+      $(in t.in)
+    (flop in)
+  =/  output=tape
+    ?~  code
+      ""
+    (of-wall:format output.u.code)
   ^-  manx
   ;html
     ;head
@@ -21,11 +31,19 @@
         ; If any code fails to format, please copy the code snippet and
         ;a/"https://github.com/tloncorp/hoon-format/issues/new": submit an issue
       ;form(method "post", enctype "text/plain")
-        ;textarea(type "text", rows "20", cols "80", name "code", id "code", placeholder "(add 2 3)");
+        ;textarea
+          =type  "text"
+          =rows  "20"
+          =cols  "80"
+          =name  "code"
+          =id    "code"
+          =placeholder  "(add 2 3)"
+          ; {input}
+        ==
         ;br;
         ;button(type "submit"):"Format!"
       ==
-      ;pre:code:"{code}"
+      ;pre:code:"{output}"
       ==
     ==
   ==
@@ -69,7 +87,11 @@
         (skip (trip code) |=(char=@tD =('\0d' char)))
       =/  =wall
         =/  gen=(each hoon [@ @])
-          =/  vex  ((full vest) [1 1] stripped)
+          =/  vex
+            %.  [[1 1] stripped]
+            %-  full
+            %+  ifix  [gay gay]
+            tall:(vang | /sentinel-path/sentinel-path/sentinel-path)
           ?~  q.vex
             [%| p.p.vex q.p.vex]
           [%& p.u.q.vex]
@@ -83,7 +105,7 @@
         ?~  wall.u.wall
           ~
         wall.u.wall(i (runt [(mul indent 2) ' '] i.wall.u.wall))
-      (give (manx-response:gen:server (landing-page `wall)))
+      (give (manx-response:gen:server (landing-page `[stripped wall])))
     ==
     ::
     ++  give

@@ -1,7 +1,6 @@
-:~  title+'Hoon Format'
+:~  title+'Hoon Formatter'
     info+'Autoformatter for hoon'
     color+0x33.f5f9
-    glob-ames+[~samnec-dozzod-marzod 0v0]
     site+/apps/hoon-format
     base+'hoon-format'
     version+[0 0 1]

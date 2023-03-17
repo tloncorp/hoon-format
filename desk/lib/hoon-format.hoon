@@ -336,6 +336,8 @@
       (lite "~")
     %+  seek
       %-  wide
+      ?:  (lien `(list hoon)`p.gen |=(=hoon ?=([%sand %tas *] (canon hoon))))
+        (p-path p.gen)
       %+  draw  (lite "~[")
       %+  draw  ((p-join hoon) (lite " ") p.gen p-hoon)
       (lite "]")
@@ -359,6 +361,21 @@
     (p-tall-3 "%~" (p-wing p.gen) (p-hoon q.gen) (p-cltr r.gen))
   ::
       %cnts  (p-cnts +.gen)
+      %dtkt
+    %+  seek
+      %-  wide
+      %+  draw  (lite ".^(")
+      %+  draw  (p-spec p.gen)
+      %+  draw  (lite " ")
+      =/  can  (canon q.gen)
+      ~&  can=can
+      ?:  ?=([%cltr *] can)
+        %+  draw  ((p-join hoon) (lite " ") p.can p-hoon)
+        (lite ")")
+      %+  draw  (p-hoon q.gen)
+      (lite ")")
+    (p-tall-n-0 ".^" (p-spec p.gen) (p-hoon q.gen) ~)
+  ::
       %dtls
     %+  draw  (lite "+(")
     %+  draw  (p-hoon p.gen)
@@ -431,6 +448,7 @@
       (p-hoon q.gen)
     (p-tall-2 "=<" (p-hoon p.gen) (p-hoon q.gen))
   ::
+      %tshp  (p-tall-2 "=-" (p-hoon p.gen) (p-hoon q.gen))
       %tsgr  (p-rune-2 "=>" (p-hoon p.gen) (p-hoon q.gen))
       %tsls
     ?:  ?=([%wthp [[%& %2] ~] *] q.gen)
@@ -576,6 +594,56 @@
     [%| *]  (lite (runt [p.limb '^'] (trip (need q.limb))))
   ==
 ::
+++  p-path
+  |=  p=(list hoon)
+  ?.  ?=([* * * *] p)
+    ((p-join hoon) (lite "/") p p-path-elem)
+  =/  sent  [%sand %ta %'sentinel-path']
+  =/  tis-1  =(sent (canon i.p))
+  =/  tis-2  =(sent (canon i.t.p))
+  =/  tis-3  =(sent (canon i.t.t.p))
+  ?:  &(tis-1 tis-2 tis-3)
+    %+  draw  (lite "%/")
+    ((p-join hoon) (lite "/") t.t.t.p p-path-elem)
+  %+  draw  (lite "/")
+  %+  draw
+    ?:  tis-1
+      (lite "=")
+    (p-path-elem i.p)
+  %+  draw
+    ?:  |(tis-1 tis-2)
+      pure
+    (lite "/")
+  %+  draw
+    ?:  tis-2
+      (lite "=")
+    (p-path-elem i.t.p)
+  %+  draw
+    ?:  ?|  &(tis-2 tis-3)
+            &(tis-1 |(tis-2 tis-3))
+        ==
+      pure
+    (lite "/")
+  %+  draw
+    ?:  tis-3
+      (lite "=")
+    (p-path-elem i.t.t.p)
+  ?~  t.t.t.p
+    pure
+  %+  draw  (lite "/")
+  ((p-join hoon) (lite "/") t.t.t.p p-path-elem)
+::
+++  p-path-elem
+  |=  =hoon
+  =/  can  (canon hoon)
+  ?:  ?=([%sand %ta %'sentinel-path'] can)
+    (lite "=")
+  ?:  ?=([%sand %ta @] can)
+    (lite (trip q.can))
+  ?:  ?=(?(%sand %cncl) -.can)
+    (p-hoon hoon)
+  :(draw (lite "[") (p-hoon hoon) (lite "]"))
+::
 ++  p-rune-2
   |=  [rune=tape p=form q=form]
   %+  seek
@@ -659,6 +727,14 @@
       (p-skin p.spec)
     %+  draw  (lite "=")
     (p-spec q.spec)
+  ::
+      %bcwt
+    %+  seek
+      %-  wide
+      %+  draw  (lite "?(")
+      %+  draw  ((p-join ^spec) (lite " ") p.spec p-spec)
+      (lite ")")
+    (p-tall-n-0 "$?" (p-spec i.p.spec) (turn t.p.spec p-spec))
   ::
       *      ~&  [%missing-spec -.spec]  pure
   ==
@@ -796,4 +872,14 @@
     (p-hoon q)
   %+  draw  line
   (p-hoon r)
+::  Skim past irrelevant hoons
+::
+++  canon
+  |=  gen=hoon
+  ^-  hoon
+  ?-  -.gen
+    %dbug  $(gen q.gen)
+    %note  $(gen q.gen)
+    *      gen
+  ==
 --
